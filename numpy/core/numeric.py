@@ -1119,7 +1119,11 @@ def tensordot(a, b, axes=2, out=None):
             if out.shape != tuple(olda+oldb):
                 correct = False
             else:
-                out = out.reshape((newshape_a[0], newshape_b[1]))
+                nout = out.reshape((newshape_a[0], newshape_b[1]))
+                if np.may_share_memory(nout, out):
+                    out = nout
+                else:
+                    correct = False
         else: 
             correct = False
         if correct is False: 
